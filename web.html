@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💰 SmartLoan AI Predictor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 25% 25%, rgba(34, 197, 94, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
+            z-index: -1;
+            animation: breathe 8s ease-in-out infinite;
+        }
+
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(15, 23, 42, 0.9);
+            border-radius: 24px;
+            backdrop-filter: blur(40px);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            animation: containerEntry 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes containerEntry {
+            0% { opacity: 0; transform: translateY(40px) scale(0.95); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .header {
+            background: linear-gradient(135deg, #22c55e 0%, #3b82f6 50%, #f59e0b 100%);
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+            animation: headerShine 4s ease-in-out infinite;
+        }
+
+        @keyframes headerShine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            50% { transform: translateX(0%) translateY(0%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.95);
+            font-weight: 400;
+            position: relative;
+            z-index: 2;
+        }
+
+        .form-container {
+            padding: 30px;
+            color: white;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            animation: formGroupEntry 0.6s ease-out both;
+        }
+
+        .form-group:nth-child(1) { animation-delay: 0.05s; }
+        .form-group:nth-child(2) { animation-delay: 0.1s; }
+        .form-group:nth-child(3) { animation-delay: 0.15s; }
+        .form-group:nth-child(4) { animation-delay: 0.2s; }
+        .form-group:nth-child(5) { animation-delay: 0.25s; }
+        .form-group:nth-child(6) { animation-delay: 0.3s; }
+        .form-group:nth-child(7) { animation-delay: 0.35s; }
+        .form-group:nth-child(8) { animation-delay: 0.4s; }
+        .form-group:nth-child(9) { animation-delay: 0.45s; }
+        .form-group:nth-child(10) { animation-delay: 0.5s; }
+        .form-group:nth-child(11) { animation-delay: 0.55s; }
+        .form-group:nth-child(12) { animation-delay: 0.6s; }
+        .form-group:nth-child(13) { animation-delay: 0.65s; }
+        .form-group:nth-child(14) { animation-delay: 0.7s; }
+
+        @keyframes formGroupEntry {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #e2e8f0;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(30, 41, 59, 0.8);
+            border: 2px solid rgba(148, 163, 184, 0.2);
+            border-radius: 12px;
+            color: white;
+            font-size: 14px;
+            backdrop-filter: blur(20px);
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .form-control:focus {
+            border-color: #22c55e;
+            box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15);
+            transform: translateY(-2px);
+            background: rgba(30, 41, 59, 1);
+        }
+
+        .form-control:hover {
+            border-color: rgba(148, 163, 184, 0.4);
+            transform: translateY(-1px);
+        }
+
+        select.form-control {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2394a3b8' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 12px center;
+            background-repeat: no-repeat;
+            background-size: 16px;
+            appearance: none;
+        }
+
+        .predict-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #22c55e 0%, #3b82f6 50%, #f59e0b 100%);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(34, 197, 94, 0.3);
+        }
+
+        .predict-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .predict-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(34, 197, 94, 0.4);
+        }
+
+        .predict-btn:hover::before {
+            left: 100%;
+        }
+
+        .predict-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .predict-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            display: none;
+            backdrop-filter: blur(20px);
+            animation: resultReveal 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .result.approved {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);
+            border: 2px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .result.rejected {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%);
+            border: 2px solid rgba(239, 68, 68, 0.3);
+        }
+
+        @keyframes resultReveal {
+            0% { opacity: 0; transform: scale(0.9) translateY(20px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .result h3 {
+            font-size: 1.8rem;
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+
+        .result h3.approved {
+            color: #22c55e;
+        }
+
+        .result h3.rejected {
+            color: #ef4444;
+        }
+
+        .result .status {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin: 20px 0;
+            animation: statusAnimation 2s ease-in-out infinite;
+        }
+
+        .result .status.approved {
+            background: linear-gradient(135deg, #22c55e, #10b981, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .result .status.rejected {
+            background: linear-gradient(135deg, #ef4444, #dc2626, #b91c1c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        @keyframes statusAnimation {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .probability-bars {
+            display: flex;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .prob-bar {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .prob-bar-fill {
+            height: 40px;
+            transition: width 1s ease-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: white;
+        }
+
+        .prob-bar-fill.approval {
+            background: linear-gradient(90deg, #22c55e, #10b981);
+        }
+
+        .prob-bar-fill.rejection {
+            background: linear-gradient(90deg, #ef4444, #dc2626);
+        }
+
+        .prob-bar label {
+            display: block;
+            text-align: center;
+            margin: 8px 0;
+            font-size: 0.9rem;
+            color: #cbd5e1;
+        }
+
+        .risk-assessment {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            text-align: left;
+        }
+
+        .risk-level {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .risk-level.low { color: #22c55e; }
+        .risk-level.medium { color: #f59e0b; }
+        .risk-level.high { color: #ef4444; }
+
+        .risk-factors {
+            font-size: 0.9rem;
+            color: #cbd5e1;
+        }
+
+        .risk-factors ul {
+            margin: 10px 0;
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .risk-factors li {
+            padding: 4px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .risk-factors li::before {
+            content: '⚠️';
+            position: absolute;
+            left: 0;
+            top: 4px;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 30px 0;
+            color: #94a3b8;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(34, 197, 94, 0.1);
+            border-top: 3px solid #22c55e;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error {
+            margin-top: 20px;
+            padding: 16px;
+            background: rgba(239, 68, 68, 0.1);
+            border: 2px solid rgba(239, 68, 68, 0.3);
+            border-radius: 12px;
+            color: #fca5a5;
+            text-align: center;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .container { margin: 10px; border-radius: 16px; }
+            .header { padding: 30px 20px; }
+            .header h1 { font-size: 2.2rem; }
+            .form-container { padding: 20px; }
+            .form-grid { grid-template-columns: 1fr; gap: 12px; }
+            .result .status { font-size: 2rem; }
+            .predict-btn { padding: 14px; font-size: 1rem; }
+            .probability-bars { flex-direction: column; gap: 10px; }
+        }
+
+        @media (max-width: 480px) {
+            body { padding: 10px; }
+            .header h1 { font-size: 1.8rem; }
+            .header p { font-size: 1rem; }
+            .result .status { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💰 SmartLoan AI Predictor</h1>
+            <p>AI-powered loan approval prediction in seconds</p>
+        </div>
+
+        <div class="form-container">
+            <form id="predictionForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="person_age">👤 Age</label>
+                        <input type="number" id="person_age" class="form-control" min="18" max="100" value="35" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="person_income">💵 Annual Income</label>
+                        <input type="number" id="person_income" class="form-control" min="1000" max="10000000" value="50000" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="person_emp_exp">💼 Employment Experience (years)</label>
+                        <input type="number" id="person_emp_exp" class="form-control" min="0" max="50" value="3" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="person_gender">⚧ Gender</label>
+                        <select id="person_gender" class="form-control" required>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="person_education">🎓 Education</label>
+                        <select id="person_education" class="form-control" required>
+                            <option value="High School">High School</option>
+                            <option value="Bachelor">Bachelor's Degree</option>
+                            <option value="Master">Master's Degree</option>
+                            <option value="PhD">PhD</option>
+                            <option value="Associate">Associate Degree</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="person_home_ownership">🏠 Home Ownership</label>
+                        <select id="person_home_ownership" class="form-control" required>
+                            <option value="RENT">Rent</option>
+                            <option value="MORTGAGE">Mortgage</option>
+                            <option value="OWN">Own</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="loan_amnt">💳 Loan Amount</label>
+                        <input type="number" id="loan_amnt" class="form-control" min="500" max="1000000" value="10000" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="loan_intent">🎯 Loan Purpose</label>
+                        <select id="loan_intent" class="form-control" required>
+                            <option value="PERSONAL">Personal</option>
+                            <option value="EDUCATION">Education</option>
+                            <option value="MEDICAL">Medical</option>
+                            <option value="VENTURE">Business Venture</option>
+                            <option value="HOMEIMPROVEMENT">Home Improvement</option>
+                            <option value="DEBTCONSOLIDATION">Debt Consolidation</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="loan_int_rate">📈 Interest Rate (%)</label>
+                        <input type="number" id="loan_int_rate" class="form-control" min="1" max="30" step="0.1" value="10.5" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="loan_percent_income">📊 Loan % of Income</label>
+                        <input type="number" id="loan_percent_income" class="form-control" min="0.01" max="1" step="0.01" value="0.2" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="credit_score">📊 Credit Score</label>
+                        <input type="number" id="credit_score" class="form-control" min="300" max="850" value="650" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cb_person_default_on_file">⚠️ Previous Default</label>
+                        <select id="cb_person_default_on_file" class="form-control" required>
+                            <option value="no">No</option>
+                            <option value="yes">Yes</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cb_person_cred_hist_length">📅 Credit History (years)</label>
+                        <input type="number" id="cb_person_cred_hist_length" class="form-control" min="0" max="50" value="5" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="previous_loan_defaults_on_file">🔍 Previous Loan Defaults</label>
+                        <select id="previous_loan_defaults_on_file" class="form-control" required>
+                            <option value="no">No</option>
+                            <option value="yes">Yes</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="predict-btn" id="predictBtn">
+                    🔮 Predict Loan Approval
+                </button>
+            </form>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Analyzing loan application with AI...</p>
+            </div>
+
+            <div class="error" id="error">
+                <p id="errorMessage"></p>
+            </div>
+
+            <div class="result" id="result">
+                <h3 id="resultTitle">🎯 Loan Decision</h3>
+                <div class="status" id="loanStatus">PENDING</div>
+
+                <div class="probability-bars">
+                    <div class="prob-bar">
+                        <div class="prob-bar-fill approval" id="approvalBar">0%</div>
+                        <label>Approval Probability</label>
+                    </div>
+                    <div class="prob-bar">
+                        <div class="prob-bar-fill rejection" id="rejectionBar">0%</div>
+                        <label>Rejection Probability</label>
+                    </div>
+                </div>
+
+                <div class="risk-assessment" id="riskAssessment">
+                    <div class="risk-level" id="riskLevel">Risk Level: Unknown</div>
+                    <div class="risk-factors" id="riskFactors"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function predictLoanApproval(data) {
+            try {
+                const response = await fetch('http://localhost:5000/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    return result;
+                } else {
+                    throw new Error(result.error || 'Prediction failed');
+                }
+            } catch (error) {
+                console.error('Error calling model API:', error);
+                throw error;
+            }
+        }
+
+        function hideAllMessages() {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('result').style.display = 'none';
+            document.getElementById('error').style.display = 'none';
+        }
+
+        function showError(message) {
+            hideAllMessages();
+            document.getElementById('errorMessage').textContent = message;
+            document.getElementById('error').style.display = 'block';
+            document.getElementById('predictBtn').disabled = false;
+        }
+
+        function showLoading() {
+            hideAllMessages();
+            document.getElementById('loading').style.display = 'block';
+        }
+
+        function showResult(result) {
+            hideAllMessages();
+
+            const resultDiv = document.getElementById('result');
+            const resultTitle = document.getElementById('resultTitle');
+            const loanStatus = document.getElementById('loanStatus');
+            const approvalBar = document.getElementById('approvalBar');
+            const rejectionBar = document.getElementById('rejectionBar');
+            const riskLevel = document.getElementById('riskLevel');
+            const riskFactors = document.getElementById('riskFactors');
+
+            // Set approval status
+            if (result.loan_approved) {
+                resultDiv.className = 'result approved';
+                resultTitle.className = 'approved';
+                resultTitle.textContent = '✅ Loan Approved!';
+                loanStatus.className = 'status approved';
+                loanStatus.textContent = 'APPROVED';
+            } else {
+                resultDiv.className = 'result rejected';
+                resultTitle.className = 'rejected';
+                resultTitle.textContent = '❌ Loan Rejected';
+                loanStatus.className = 'status rejected';
+                loanStatus.textContent = 'REJECTED';
+            }
+
+            // Set probability bars
+            const approvalPercent = Math.round(result.approval_probability * 100);
+            const rejectionPercent = Math.round(result.rejection_probability * 100);
+
+            approvalBar.style.width = approvalPercent + '%';
+            approvalBar.textContent = approvalPercent + '%';
+
+            rejectionBar.style.width = rejectionPercent + '%';
+            rejectionBar.textContent = rejectionPercent + '%';
+
+            // Set risk assessment
+            const risk = result.risk_assessment;
+            riskLevel.textContent = `Risk Level: ${risk.risk_level}`;
+            riskLevel.className = `risk-level ${risk.risk_level.toLowerCase().replace(' ', '')}`;
+
+            let factorsHtml = `<strong>Debt-to-Income Ratio:</strong> ${risk.debt_to_income_ratio}<br>`;
+
+            if (risk.risk_factors && risk.risk_factors.length > 0) {
+                factorsHtml += '<strong>Risk Factors:</strong><ul>';
+                risk.risk_factors.forEach(factor => {
+                    factorsHtml += `<li>${factor}</li>`;
+                });
+                factorsHtml += '</ul>';
+            } else {
+                factorsHtml += '<strong>Risk Factors:</strong> None identified';
+            }
+
+            riskFactors.innerHTML = factorsHtml;
+
+            resultDiv.style.display = 'block';
+            resultDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            document.getElementById('predictBtn').disabled = false;
+        }
+
+        document.getElementById('predictionForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            document.getElementById('predictBtn').disabled = true;
+            showLoading();
+
+            const formData = {
+                person_age: parseInt(document.getElementById('person_age').value),
+                person_income: parseInt(document.getElementById('person_income').value),
+                person_emp_exp: parseInt(document.getElementById('person_emp_exp').value),
+                person_gender: document.getElementById('person_gender').value,
+                person_education: document.getElementById('person_education').value,
+                person_home_ownership: document.getElementById('person_home_ownership').value,
+                loan_amnt: parseInt(document.getElementById('loan_amnt').value),
+                loan_intent: document.getElementById('loan_intent').value,
+                loan_int_rate: parseFloat(document.getElementById('loan_int_rate').value),
+                loan_percent_income: parseFloat(document.getElementById('loan_percent_income').value),
+                credit_score: parseInt(document.getElementById('credit_score').value),
+                cb_person_default_on_file: document.getElementById('cb_person_default_on_file').value,
+                cb_person_cred_hist_length: parseInt(document.getElementById('cb_person_cred_hist_length').value),
+                previous_loan_defaults_on_file: document.getElementById('previous_loan_defaults_on_file').value
+            };
+
+            // Debug: Log the data being sent
+            console.log('Sending data:', formData);
+
+            try {
+                const result = await predictLoanApproval(formData);
+                showResult(result);
+            } catch (error) {
+                showError('Unable to connect to prediction service. Please ensure the Flask server is running on localhost:5000.');
+                console.error('Prediction error:', error);
+            }
+        });
+
+        // Add smooth focus animations
+        document.querySelectorAll('.form-control').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'translateY(-2px)';
+                this.parentElement.style.transition = 'transform 0.3s ease';
+            });
+
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Check server health on load
+        async function checkServerHealth() {
+            try {
+                const response = await fetch('http://localhost:5000/health');
+                const data = await response.json();
+                console.log('Server status:', data);
+            } catch (error) {
+                console.warn('Server health check failed:', error);
+            }
+        }
+
+        // Auto-calculate loan percent income when values change
+        function updateLoanPercentIncome() {
+            const income = parseFloat(document.getElementById('person_income').value) || 0;
+            const loanAmount = parseFloat(document.getElementById('loan_amnt').value) || 0;
+
+            if (income > 0 && loanAmount > 0) {
+                const percentage = (loanAmount / income).toFixed(2);
+                document.getElementById('loan_percent_income').value = Math.min(percentage, 1);
+            }
+        }
+
+        document.getElementById('person_income').addEventListener('input', updateLoanPercentIncome);
+        document.getElementById('loan_amnt').addEventListener('input', updateLoanPercentIncome);
+
+        // Check server when page loads
+        window.addEventListener('load', checkServerHealth);
+    </script>
+</body>
+</html>
