@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 import seaborn as sns
 from sklearn.model_selection import train_test_split,RandomizedSearchCV
@@ -39,13 +40,13 @@ print(y.head())
 #splitting data into test and train
 xtrain,xtest,ytrain,ytest=train_test_split(x,y,test_size=0.3)
 #initializing base models and training them on the training data
-decsiontreemodel=DecisionTreeClassifier()
+decsiontreemodel=DecisionTreeClassifier(random_state=42)
 decsiontreemodel.fit(xtrain,ytrain)
 preddeci=decsiontreemodel.predict(xtest)
-randomforestmodel=RandomForestClassifier()
+randomforestmodel=RandomForestClassifier(random_state=42)
 randomforestmodel.fit(xtrain,ytrain)
 predrandfr=randomforestmodel.predict(xtest)
-gb_model = GradientBoostingClassifier()
+gb_model = GradientBoostingClassifier(random_state=42)
 gb_model.fit(xtrain, ytrain)
 #tuning up hyperparameters of randomforest using randomizedsearch for best result time and computational power wise
 param_gridrf = {
@@ -104,6 +105,20 @@ print("decision tree report:\n", classification_report(ytest, dtmodelpred))
 print("gradient boosting results")
 print("accuracy:", accuracy_score(ytest, gb_pred_tuned))
 print("gradient boosting lassification report:\n", classification_report(ytest, gb_pred_tuned))
+base=LogisticRegression(random_state=42)
+def compare_with_baseline(base, dt_model, xtrain, xtest, ytrain, ytest):
+    base.fit(xtrain, ytrain)
+    base_pred = base.predict(xtest)
+    baseline_acc = accuracy_score(ytest,base_pred)
+    print(f"baseline logistic regression accuracy: {baseline_acc:.4f}")
+
+    dt_model.fit(xtrain, ytrain)
+    dt_pred = dt_model.predict(xtest)
+    dt_acc = accuracy_score(ytest, dt_pred)
+    outcome = "outperformed" if dt_acc > baseline_acc else "underperformed"
+
+    print(f"DecisionTreeClassifier Accuracy: {dt_acc:.4f} ({outcome})")
+compare_with_baseline(base, dtrandomsearch, xtrain, xtest, ytrain, ytest)
 def plot_confusion(y_true, y_pred, title):
     cm = confusion_matrix(y_true, y_pred)
     disp = ConfusionMatrixDisplay(confusion_matrix=cm)
@@ -117,15 +132,15 @@ plot_confusion(ytest, gb_pred_tuned, "GB Confusion Matrix")
 plt.figure(figsize=(12, 8))
 corr_matrix = df.corr(numeric_only=True)
 sns.heatmap(corr_matrix, annot=True, fmt=".2f", cmap="coolwarm")
-plt.title("🔍 Feature Correlation Heatmap")
+plt.title(" Feature Correlation Heatmap")
 plt.show()
 sns.boxplot(x='loan_status', y='loan_amnt', data=df)
-plt.title("💵 Loan Amount vs Loan Status")
+plt.title(" Loan Amount vs Loan Status")
 plt.xlabel("Loan Status (0 = Denied, 1 = Approved)")
 plt.ylabel("Loan Amount")
 plt.show()
 sns.boxplot(x='loan_status', y='person_income', data=df)
-plt.title("💵 person_income vs Loan Status")
+plt.title(" person_income vs Loan Status")
 plt.xlabel("Loan Status (0 = Denied, 1 = Approved)")
 plt.ylabel("Loan Amount")
 plt.show()

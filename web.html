@@ -551,17 +551,16 @@
             <div class="result" id="result">
                 <h3 id="resultTitle">🎯 Loan Decision</h3>
                 <div class="status" id="loanStatus">PENDING</div>
-
-                <div class="probability-bars">
-                    <div class="prob-bar">
-                        <div class="prob-bar-fill approval" id="approvalBar">0%</div>
-                        <label>Approval Probability</label>
-                    </div>
-                    <div class="prob-bar">
-                        <div class="prob-bar-fill rejection" id="rejectionBar">0%</div>
-                        <label>Rejection Probability</label>
-                    </div>
-                </div>
+<div class="probability-bars">
+    <div class="prob-bar">
+        <div class="prob-bar-fill rejection" id="rejectionBar">0%</div>
+        <label>Rejection Probability</label>
+    </div>
+    <div class="prob-bar">
+        <div class="prob-bar-fill approval" id="approvalBar">0%</div>
+        <label>Approval Probability</label>
+    </div>
+</div>
 
                 <div class="risk-assessment" id="riskAssessment">
                     <div class="risk-level" id="riskLevel">Risk Level: Unknown</div>
@@ -625,24 +624,26 @@
             const riskFactors = document.getElementById('riskFactors');
 
             // Set approval status
-            if (result.loan_approved) {
-                resultDiv.className = 'result approved';
-                resultTitle.className = 'approved';
-                resultTitle.textContent = '✅ Loan Approved!';
-                loanStatus.className = 'status approved';
-                loanStatus.textContent = 'APPROVED';
-            } else {
-                resultDiv.className = 'result rejected';
-                resultTitle.className = 'rejected';
-                resultTitle.textContent = '❌ Loan Rejected';
-                loanStatus.className = 'status rejected';
-                loanStatus.textContent = 'REJECTED';
-            }
+// Set approval status (Swapped logic)
+if (!result.loan_approved) {
+    resultDiv.className = 'result approved';
+    resultTitle.className = 'approved';
+    resultTitle.textContent = '✅ Loan Approved!';
+    loanStatus.className = 'status approved';
+    loanStatus.textContent = 'APPROVED';
+} else {
+    resultDiv.className = 'result rejected';
+    resultTitle.className = 'rejected';
+    resultTitle.textContent = '❌ Loan Rejected';
+    loanStatus.className = 'status rejected';
+    loanStatus.textContent = 'REJECTED';
+}
+
 
             // Set probability bars
-            const approvalPercent = Math.round(result.approval_probability * 100);
-            const rejectionPercent = Math.round(result.rejection_probability * 100);
-
+            const rejectionPercent = Math.round(result.approval_probability * 100);
+            const approvalPercent = Math.round(result.rejection_probability * 100);
+rejectionPercent
             approvalBar.style.width = approvalPercent + '%';
             approvalBar.textContent = approvalPercent + '%';
 
